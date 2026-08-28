@@ -1,4 +1,5 @@
-package com.medicine.medicine;
+package com.medicine.management.domain.dto;
+import com.medicine.management.domain.entity.TransactionType;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

@@ -1,8 +1,13 @@
-package com.medicine.medicine;
+package com.medicine.management.controller;
 
-import com.medicine.common.ApiResponse;
+import com.medicine.management.common.ApiResponse;
+import com.medicine.management.domain.dto.MedicineRequest;
+import com.medicine.management.domain.dto.StockAdjustmentRequest;
+import com.medicine.management.domain.entity.Medicine;
+import com.medicine.management.service.MedicineService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +21,11 @@ public class MedicineController {
     public ApiResponse<List<Medicine>> list(@RequestParam(required = false) String keyword, @RequestParam(required = false) Boolean lowStock) { return ApiResponse.ok(medicineService.list(keyword, lowStock)); }
     @GetMapping("/medicines/{id}")
     public ApiResponse<Medicine> get(@PathVariable Long id) { return ApiResponse.ok(medicineService.get(id)); }
-    @PostMapping("/medicines")
+    @PostMapping("/medicines") @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Medicine> create(@Valid @RequestBody MedicineRequest request) { return ApiResponse.ok("药品已新增", medicineService.create(request)); }
-    @PutMapping("/medicines/{id}")
+    @PutMapping("/medicines/{id}") @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Medicine> update(@PathVariable Long id, @Valid @RequestBody MedicineRequest request) { return ApiResponse.ok("药品已更新", medicineService.update(id, request)); }
-    @DeleteMapping("/medicines/{id}")
+    @DeleteMapping("/medicines/{id}") @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> delete(@PathVariable Long id) { medicineService.delete(id); return ApiResponse.ok("药品已删除", null); }
     @PostMapping("/medicines/{id}/stock")
     public ApiResponse<Medicine> adjust(@PathVariable Long id, @Valid @RequestBody StockAdjustmentRequest request) { return ApiResponse.ok("库存已更新", medicineService.adjustStock(id, request)); }

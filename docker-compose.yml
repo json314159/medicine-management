@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    mem_limit: 512m
+    environment:
+      SPRING_PROFILES_ACTIVE: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: medicine_management
+      DB_USERNAME: medicine_app
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Shanghai
+    networks:
+      - default
+      - shared_mysql
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    mem_limit: 128m
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-8088}:80"
+    depends_on:
+      - backend
+
+networks:
+  shared_mysql:
+    external: true
+    name: 1panel-network

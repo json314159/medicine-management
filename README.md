@@ -48,3 +48,13 @@ DB_PASSWORD=change-me
 ```sql
 CREATE DATABASE medicine_management DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
+
+## Docker 部署
+
+```bash
+cp .env.example .env
+# 修改 .env 中的数据库密码
+docker compose up -d --build
+```
+
+默认通过服务器的 `8088` 端口访问。Docker 部署使用持久化 H2 数据卷，适合轻量服务器；生产环境可按上方配置切换至 MySQL。

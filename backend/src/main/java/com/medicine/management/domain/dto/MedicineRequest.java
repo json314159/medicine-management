@@ -1,4 +1,4 @@
-package com.medicine.medicine;
+package com.medicine.management.domain.dto;
 
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;

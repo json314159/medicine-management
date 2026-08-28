@@ -11,7 +11,7 @@ function submit() {
 }
 </script>
 <template>
-  <div class="modal-backdrop" @click.self="emit('cancel')">
+  <div class="modal-backdrop">
     <form class="modal-card narrow" @submit.prevent="submit"><header><h2>库存操作</h2><button type="button" class="icon-button" @click="emit('cancel')">×</button></header>
       <p class="muted"><strong>{{ medicine.name }}</strong> · 当前库存 {{ medicine.stockQuantity }} {{ medicine.unit }}</p>
       <div class="form-grid one-col"><label>操作类型 <select v-model="form.type"><option value="IN">入库</option><option value="OUT">出库</option><option value="ADJUST">盘点调整（设为数量）</option></select></label><label>{{ form.type === 'ADJUST' ? '调整后库存' : '操作数量' }} <input v-model.number="form.quantity" type="number" min="1" required /></label><label>备注 <textarea v-model="form.remark" rows="3" placeholder="可选" /></label></div>

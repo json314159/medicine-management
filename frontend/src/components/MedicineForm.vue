@@ -13,7 +13,7 @@ function submit() {
 }
 </script>
 <template>
-  <div class="modal-backdrop" @click.self="emit('cancel')">
+  <div class="modal-backdrop">
     <form class="modal-card" @submit.prevent="submit">
       <header><h2>{{ title }}</h2><button type="button" class="icon-button" @click="emit('cancel')">×</button></header>
       <div class="form-grid">

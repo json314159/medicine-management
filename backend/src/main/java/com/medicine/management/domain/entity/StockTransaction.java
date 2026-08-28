@@ -1,4 +1,4 @@
-package com.medicine.medicine;
+package com.medicine.management.domain.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

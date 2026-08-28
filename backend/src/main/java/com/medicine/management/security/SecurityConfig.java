@@ -1,0 +1,11 @@
+package com.medicine.management.security;
+import com.medicine.management.domain.entity.AppUser;
+import com.medicine.management.repository.AppUserRepository;
+import org.springframework.context.annotation.*; import org.springframework.security.authentication.*; import org.springframework.security.authentication.dao.DaoAuthenticationProvider; import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity; import org.springframework.security.config.annotation.web.builders.HttpSecurity; import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; import org.springframework.security.config.http.SessionCreationPolicy; import org.springframework.security.core.authority.SimpleGrantedAuthority; import org.springframework.security.core.userdetails.*; import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; import org.springframework.security.crypto.password.PasswordEncoder; import org.springframework.security.web.SecurityFilterChain; import org.springframework.security.web.authentication.HttpStatusEntryPoint; import org.springframework.http.HttpStatus;
+@Configuration @EnableWebSecurity @EnableMethodSecurity
+public class SecurityConfig {
+ @Bean PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
+ @Bean UserDetailsService users(AppUserRepository repo){return username -> repo.findByUsername(username).map(u -> new User(u.getUsername(),u.getPassword(),u.isEnabled(),true,true,true,java.util.List.of(new SimpleGrantedAuthority("ROLE_"+u.getRole())))).orElseThrow(()->new UsernameNotFoundException("账号或密码错误"));}
+ @Bean AuthenticationManager authenticationManager(UserDetailsService users, PasswordEncoder encoder){ DaoAuthenticationProvider p=new DaoAuthenticationProvider(); p.setUserDetailsService(users); p.setPasswordEncoder(encoder); return new ProviderManager(p); }
+ @Bean SecurityFilterChain filter(HttpSecurity http) throws Exception { return http.csrf(c->c.disable()).sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).authorizeHttpRequests(a->a.requestMatchers("/api/auth/login","/swagger-ui/**","/v3/api-docs/**").permitAll().anyRequest().authenticated()).exceptionHandling(e->e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))).formLogin(f->f.disable()).httpBasic(b->b.disable()).build(); }
+}

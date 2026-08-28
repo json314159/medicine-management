@@ -1,6 +1,12 @@
-package com.medicine.medicine;
+package com.medicine.management.service;
 
-import com.medicine.common.BusinessException;
+import com.medicine.management.common.BusinessException;
+import com.medicine.management.domain.dto.MedicineRequest;
+import com.medicine.management.domain.dto.StockAdjustmentRequest;
+import com.medicine.management.domain.entity.Medicine;
+import com.medicine.management.domain.entity.StockTransaction;
+import com.medicine.management.repository.MedicineRepository;
+import com.medicine.management.repository.StockTransactionRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,0 +1,32 @@
+networks:
+  1panel-network:
+    external: true
+
+services:
+  mysql:
+    container_name: ${CONTAINER_NAME}
+    image: mysql:8.4.7
+    restart: always
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 1.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${PANEL_DB_ROOT_PASSWORD}
+    networks:
+      1panel-network:
+        aliases:
+          - mysql
+    ports:
+      - "${HOST_IP}:${PANEL_APP_PORT_HTTP}:3306"
+    volumes:
+      - ./data/:/var/lib/mysql
+      - ./conf/my.cnf:/etc/my.cnf:ro
+      - ./log:/var/log/mysql
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_ROOT_PASSWORD mysqladmin ping -h 127.0.0.1 -uroot --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s

@@ -1,4 +1,5 @@
 export interface ApiResponse<T> { success: boolean; message: string; data: T }
+export interface CurrentUser { username: string; role: 'ADMIN' | 'OPERATOR' }
 export interface Medicine {
   id: number; code: string; name: string; genericName?: string; specification?: string; manufacturer?: string; category?: string;
   unit: string; purchasePrice: number; salePrice: number; stockQuantity: number; stockThreshold: number; expiryDate?: string; batchNo?: string; enabled: boolean; updatedAt: string

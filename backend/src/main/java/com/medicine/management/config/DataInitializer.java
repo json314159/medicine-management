@@ -1,12 +1,13 @@
-package com.medicine.config;
+package com.medicine.management.config;
 
-import com.medicine.medicine.Medicine;
-import com.medicine.medicine.MedicineRepository;
+import com.medicine.management.domain.entity.Medicine;
+import com.medicine.management.repository.MedicineRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import com.medicine.management.domain.entity.AppUser; import com.medicine.management.repository.AppUserRepository; import org.springframework.security.crypto.password.PasswordEncoder; import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class DataInitializer {
@@ -19,6 +20,7 @@ public class DataInitializer {
             repository.save(create("VITC-001", "维生素C片", "维生素C", "100mg×100片", "东北制药", "维生素", "瓶", "6.80", "12.00", 90, 30, LocalDate.now().plusDays(365), "VC202606"));
         };
     }
+    @Bean CommandLineRunner initUsers(AppUserRepository users, PasswordEncoder encoder, @Value("${app.admin-password:Admin@123456}") String password) { return args -> { if(users.count()==0){ AppUser admin=new AppUser(); admin.setUsername("admin"); admin.setPassword(encoder.encode(password)); admin.setRole("ADMIN"); users.save(admin); AppUser operator=new AppUser(); operator.setUsername("operator"); operator.setPassword(encoder.encode("Operator@123456")); operator.setRole("OPERATOR"); users.save(operator); } }; }
     private Medicine create(String code, String name, String genericName, String specification, String manufacturer, String category, String unit, String purchasePrice, String salePrice, int stock, int threshold, LocalDate expiry, String batch) {
         Medicine medicine = new Medicine();
         medicine.setCode(code); medicine.setName(name); medicine.setGenericName(genericName); medicine.setSpecification(specification); medicine.setManufacturer(manufacturer); medicine.setCategory(category); medicine.setUnit(unit);

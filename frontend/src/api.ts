@@ -1,7 +1,7 @@
 import axios from 'axios'
-import type { ApiResponse, Dashboard, Medicine, MedicinePayload, StockAdjustment } from './types'
+import type { ApiResponse, CurrentUser, Dashboard, Medicine, MedicinePayload, StockAdjustment } from './types'
 
-const request = axios.create({ baseURL: '/api', timeout: 10000 })
+const request = axios.create({ baseURL: '/api', timeout: 10000, withCredentials: true })
 request.interceptors.response.use(response => {
   const body = response.data as ApiResponse<unknown>
   if (!body.success) return Promise.reject(new Error(body.message))
@@ -16,3 +16,4 @@ export const medicineApi = {
   adjust: (id: number, payload: StockAdjustment) => data<Medicine>(request.post(`/medicines/${id}/stock`, payload)),
   dashboard: () => data<Dashboard>(request.get('/dashboard'))
 }
+export const authApi = { login: (username: string, password: string) => data<CurrentUser>(request.post('/auth/login', { username, password })), logout: () => data<void>(request.post('/auth/logout')), me: () => data<CurrentUser>(request.get('/auth/me')) }
